@@ -309,6 +309,14 @@ The `data/` directory contains:
 - Strategy performance CSV files (`*_portfolio_values.csv`): Portfolio values over time
 - Metrics file (`strategy_metrics.csv`): Comparison metrics for all strategies
 
+### Data Source
+
+The historical cryptocurrency price data was obtained using:
+- **tvDatafeed**: A Python library to download historical data from TradingView
+- **Binance**: All price data was sourced from Binance exchange
+- **Timeframe**: Daily close prices converted to daily returns
+- **Period**: Approximately three years of data (2022-2025)
+
 ## Output
 
 After running strategies, the following outputs are generated:
