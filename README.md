@@ -4,7 +4,7 @@ This repository contains implementations of various trading strategies based on 
 
 ## Summary of Results
 
-### Performance Metrics
+### Performance Metrics Over 3 Years
 | Strategy | Total Return | Annualized Return | Max Drawdown | Sharpe Ratio | Sortino Ratio |
 |----------|--------------|------------------|--------------|--------------|---------------|
 | BTC Hold | 260.7%       | 51.8%            | 45.7%        | 1.62         | 2.45          |
@@ -98,6 +98,71 @@ The analysis uses historical cryptocurrency price data spanning approximately **
 - **Equal Weight**: Simple equal-weighted portfolio across all available assets (baseline strategy)
 
 - **BTC Hold**: Bitcoin holding strategy (benchmark strategy), 100% allocation to Bitcoin
+
+## Configuration and Parameter Settings
+
+All strategy parameters are configured in the `config/strategy_params.yaml` file. You can adjust these parameters to experiment with different strategy configurations.
+
+### General Parameters
+
+```yaml
+general:
+  data_file: data/daily_returns.csv  # Path to the historical returns data
+  initial_capital: 100000            # Starting capital for backtests
+  rebalance_frequency: W             # Rebalancing frequency (W=weekly, D=daily, M=monthly)
+```
+
+### Strategy-Specific Parameters
+
+```yaml
+hrp:
+  lookback_days: 60                  # Historical window for covariance calculation
+  min_allocation: 0.02               # Minimum asset allocation (prevents tiny allocations)
+  n_clusters: dynamic                # Number of clusters ("dynamic" or specific number)
+  n_per_cluster: 2                   # Top assets to select from each cluster
+
+momentum:
+  lookback_days: 60                  # Historical data window
+  momentum_window: 30                # Window for momentum calculation
+  n_assets: 10                       # Number of top momentum assets to include
+
+momentum_hrp:
+  lookback_days: 60                  # Historical data window
+  momentum_window: 30                # Window for momentum calculation
+  n_momentum_assets: 8               # Number of top momentum assets to pass to HRP
+
+momentum_weighted_hrp:
+  lookback_days: 60                  # Historical data window
+  momentum_weight: 0.5               # Weight given to momentum scores (0-1)
+  momentum_window: 30                # Window for momentum calculation
+  n_momentum_assets: 20              # Max number of assets to consider
+
+equal_weight:
+  lookback_days: 60                  # Historical data window
+  n_assets: null                     # Number of assets (null = all available assets)
+```
+
+### Asset Selection
+
+You can specify which cryptocurrency symbols to include in the analysis:
+
+```yaml
+symbols:
+  crypto_symbols:                    # List of specific symbols to include
+  - BTCUSDT
+  - ETHUSDT
+  - BNBUSDT
+  # ... more symbols
+  use_all_from_data: false           # If true, use all available symbols in the data file
+```
+
+### Modifying Parameters
+
+To experiment with different parameter settings:
+
+1. Edit the `config/strategy_params.yaml` file with your desired values
+2. Run the strategies using the commands described in the "Running Strategies" section
+3. Compare results to see how parameter changes affect performance
 
 ## Setup and Environment
 
