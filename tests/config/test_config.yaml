@@ -1,0 +1,25 @@
+# Test configuration file
+
+# General settings for testing
+general:
+  initial_capital: 10000
+  rebalance_frequency: 'W'
+  data_file: 'tests/data/test_returns.csv'
+
+# Test parameters for different strategies
+hrp:
+  lookback_days: 5
+
+equal_weight:
+  lookback_days: 5
+  n_assets: 3
+
+momentum:
+  lookback_days: 5
+  momentum_window: 3
+  n_assets: 2
+
+momentum_hrp:
+  lookback_days: 5
+  momentum_window: 3
+  n_momentum_assets: 3

@@ -1,0 +1,39 @@
+btc_hold: null
+equal_weight:
+  lookback_days: 60
+  n_assets: null
+general:
+  data_file: data/daily_returns.csv
+  initial_capital: 100000
+  rebalance_frequency: W
+hrp:
+  lookback_days: 60
+  min_allocation: 0.02
+  n_clusters: dynamic
+  n_per_cluster: 2
+momentum:
+  lookback_days: 60
+  momentum_window: 30
+  n_assets: 10
+momentum_hrp:
+  lookback_days: 60
+  momentum_window: 30
+  n_momentum_assets: 8
+momentum_weighted_hrp:
+  lookback_days: 60
+  momentum_weight: 0.5
+  momentum_window: 30
+  n_momentum_assets: 20
+symbols:
+  crypto_symbols:
+  - BTCUSDT
+  - ETHUSDT
+  - BNBUSDT
+  - XRPUSDT
+  - ADAUSDT
+  - SOLUSDT
+  - DOGEUSDT
+  - LTCUSDT
+  - LINKUSDT
+  - BCHUSDT
+  use_all_from_data: false

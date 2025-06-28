@@ -1,0 +1,258 @@
+# Hierarchical Risk Parity (HRP) Trading Strategies
+
+This repository contains implementations of various trading strategies based on the Hierarchical Risk Parity algorithm and other portfolio optimization techniques for cryptocurrency trading. The project explores different portfolio construction methodologies and compares their performance in the volatile cryptocurrency market.
+
+## Summary of Results
+
+### Performance Metrics
+| Strategy | Total Return | Annualized Return | Max Drawdown | Sharpe Ratio | Sortino Ratio |
+|----------|--------------|------------------|--------------|--------------|---------------|
+| BTC Hold | 260.7%       | 51.8%            | 45.7%        | 1.62         | 2.45          |
+| HRP      | 152.3%       | 36.2%            | 38.2%        | 1.31         | 1.98          |
+| Momentum | 168.5%       | 38.9%            | 42.1%        | 1.26         | 1.92          |
+| Mom-HRP  | 172.6%       | 39.5%            | 40.5%        | 1.29         | 1.96          |
+| Mom-W HRP| 175.2%       | 39.8%            | 39.8%        | 1.32         | 1.99          |
+| Equal W  | 138.9%       | 33.7%            | 50.3%        | 1.12         | 1.72          |
+
+### Key Findings
+- BTC Hold strategy outperformed all others in total and annualized returns
+- HRP-based strategies showed improved risk metrics (lower drawdowns)
+- Momentum-enhanced strategies improved upon pure HRP but still underperformed BTC Hold
+- Equal weight approach had the worst risk-adjusted performance metrics
+
+### Comparison Visualizations
+
+#### Portfolio Value Comparison
+![Portfolio Value Comparison](./images/portfolio_comparison_clean.png)
+
+#### Performance Metrics Comparison
+![Metrics Comparison](./images/metrics_comparison_clean.png)
+
+#### Drawdown Comparison
+![Drawdown Comparison](./images/drawdown_comparison_clean.png)
+
+## Repository Structure
+
+```
+hrp/
+├── config/          # Configuration files and parameters for strategies
+├── data/            # CSV data files for historical returns and strategy outcomes
+├── images/          # Generated charts and visualization images
+├── notebooks/       # Jupyter notebooks for analysis
+├── src/             # Source code directory
+│   ├── analysis/    # Strategy comparison and analysis scripts
+│   │   └── strategy_comparison.py  # Tool for comparing strategy performance
+│   ├── strategies/  # Implementation of various trading strategies
+│   │   ├── btc_hold.py             # Bitcoin hold benchmark strategy 
+│   │   ├── equal_weight.py         # Equal weighting strategy
+│   │   ├── hrp.py                  # Hierarchical Risk Parity strategy
+│   │   ├── momentum_hrp.py         # Momentum + HRP hybrid strategy
+│   │   ├── momentum_strategy.py    # Pure momentum strategy
+│   │   └── momentum_weighted_hrp.py # Momentum-weighted HRP strategy
+│   └── utils/       # Utility functions and helper modules
+│       ├── config_loader.py        # Configuration loading utilities
+│       ├── covariance_estimators.py # Covariance estimation methods
+│       ├── data_loader.py          # Data loading and processing
+│       └── hrp_utils.py            # HRP algorithm utilities
+├── tests/           # Test files for the codebase
+├── compare_strategies.py  # Enhanced strategy comparison script
+├── main.py          # Main entry point for running strategies
+├── requirements.txt # Project dependencies
+├── run_all_strategies.py  # Script to run all strategies with clean visualization
+├── run_strategy.py  # Helper script for running individual strategies
+└── setup.py         # Package setup file
+```
+
+## Data Used
+
+The analysis uses historical cryptocurrency price data spanning approximately **three years** (from June 2022 to June 2025). Key characteristics of the dataset include:
+
+- **Coverage**: Approximately 40 cryptocurrency symbols, focusing on major cryptocurrencies and tokens with sufficient liquidity
+- **Frequency**: Daily price data used for calculating weekly returns
+- **Point-in-time integrity**: All strategies utilize only data available at the rebalance date (no look-ahead bias)
+- **Source**: Price data collected from major cryptocurrency exchanges via API
+
+## Strategies Implemented
+
+- **Hierarchical Risk Parity (HRP)**: Risk-based portfolio optimization using hierarchical clustering to allocate capital based on the hierarchical structure of asset correlations. Parameters include:
+  - Correlation method: Pearson correlation
+  - Linkage method: Average linkage
+  - Distance metric: Correlation-based distance
+  - Lookback window: 60 days of historical data
+
+- **Momentum Strategy**: Asset selection based on price momentum, allocating more capital to assets showing stronger positive momentum. Parameters include:
+  - Momentum window: 30 days
+  - Selection threshold: Top 10 assets
+  - Weighting: Proportional to momentum scores
+
+- **Momentum-HRP Hybrid**: Combines momentum-based asset selection with HRP-based weight allocation. First filters assets by momentum, then applies HRP for risk-based weighting. Parameters include:
+  - Momentum window: 30 days
+  - Asset selection: Top 15 by momentum score
+  - HRP parameters: Same as standard HRP
+
+- **Momentum-Weighted HRP**: Hybrid strategy that uses momentum scores to modify the risk allocation in the HRP framework. Parameters include:
+  - Momentum calculation window: 30 days
+  - Momentum influence factor: 0.5
+  - HRP parameters: Same as standard HRP
+
+- **Equal Weight**: Simple equal-weighted portfolio across all available assets (baseline strategy)
+
+- **BTC Hold**: Bitcoin holding strategy (benchmark strategy), 100% allocation to Bitcoin
+
+## Setup and Environment
+
+### Setting up Virtual Environment
+
+```bash
+# Create a virtual environment
+python -m venv venv
+
+# Activate the virtual environment
+# On macOS/Linux:
+source venv/bin/activate
+# On Windows:
+# venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+## Rebalancing Methodology
+
+All strategies (except BTC Hold) use a **weekly rebalancing** frequency. This specific frequency was chosen after extensive testing of different rebalancing periods:
+
+- **Weekly rebalancing** proved optimal for cryptocurrency markets due to:
+  - Balancing transaction costs with the need to adapt to rapid market changes
+  - Capturing momentum effects that typically manifest over 1-4 week periods
+  - Providing sufficient reaction time to market regime changes
+
+- **Alternative periods tested**:
+  - **Daily rebalancing**: Higher returns in some strategies (particularly HRP) but excessive transaction costs eliminated the advantage
+  - **Biweekly rebalancing**: Reduced performance due to missing important market shifts
+  - **Monthly rebalancing**: Too slow to respond to the characteristic volatility of crypto markets
+
+## Hierarchical Risk Parity Methodology
+
+Hierarchical Risk Parity (HRP) is a portfolio optimization technique introduced by Marcos López de Prado in his paper ["Building Diversified Portfolios that Outperform Out of Sample"](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2708678). HRP offers several advantages over traditional methods:
+
+### Advantages of HRP
+- **Non-parametric approach**: Does not require estimating expected returns
+- **Robustness to estimation errors**: Less sensitive to estimation error than Markowitz optimization
+- **Dimensionality handling**: Works well with high-dimensional, noisy data typical of crypto markets
+- **Cluster-based risk allocation**: Effectively balances risk across different market segments
+
+### Why HRP for Cryptocurrency Markets
+HRP is particularly well-suited for cryptocurrency portfolios because:
+- Crypto markets exhibit high dimensionality and noise
+- Return distributions are non-normal with extreme tail events
+- Correlation structures change rapidly, requiring robust estimation methods
+- Traditional mean-variance optimization often fails due to instability
+
+### Top HRP Selected Assets
+In our implementation, HRP typically allocated the most capital to:
+- Bitcoin (BTC): ~25-30% allocation
+- Ethereum (ETH): ~15-20% allocation
+- Other major assets: Varying allocations to assets like BNB, SOL, and XRP based on their risk characteristics
+
+## Performance Considerations
+
+### Results and Transaction Costs
+- All reported returns are **gross returns** before transaction costs
+- While HRP with daily rebalancing showed potential to outperform BTC in some market conditions, transaction costs (trading fees, slippage) completely eliminated this advantage
+- Even without transaction costs, none of the tested strategies consistently outperformed a simple Bitcoin hold strategy over the full test period
+
+### Implementation Decision
+- The project did not proceed to paper trading due to the inability to outperform the simple BTC hold strategy even before accounting for transaction costs
+- The strategies showed promising results during strong bull market phases, but simple BTC exposure often proved superior overall
+
+
+
+## Running Strategies
+
+### Running a Single Strategy
+
+```bash
+# Run HRP strategy
+python main.py hrp
+
+# Run momentum strategy
+python main.py momentum
+
+# Run equal weight strategy
+python main.py equal_weight
+
+# Run Bitcoin hold benchmark
+python main.py btc_hold
+
+# Run momentum-HRP hybrid
+python main.py momentum_hrp
+
+# Run momentum-weighted HRP
+python main.py momentum_weighted_hrp
+```
+
+### Running All Strategies and Comparing
+
+```bash
+# Run all strategies
+python run_all_strategies.py
+
+# Run specific strategies and exclude others
+python run_all_strategies.py --strategies hrp momentum_hrp --exclude btc_hold
+
+# Only generate comparison reports without re-running strategies
+python run_all_strategies.py --only-compare
+
+# Show plots in addition to saving them
+python run_all_strategies.py --show-plots
+```
+
+### Comparing Strategies
+
+```bash
+# Compare all strategies with clean visualization
+python compare_strategies.py
+
+# Compare specific strategies
+python compare_strategies.py --strategies hrp equal_weight btc_hold
+
+# Compare all but exclude some
+python compare_strategies.py --exclude momentum_hrp
+```
+
+## Running Tests
+
+```bash
+# Run all tests
+pytest
+
+# Run specific test file
+pytest tests/test_hrp_core.py
+
+# Run tests with verbose output
+pytest -v
+
+# Run tests and show coverage
+pytest --cov=src
+```
+
+## Data
+
+The `data/` directory contains:
+- `daily_returns.csv`: Historical daily returns for various cryptocurrencies
+- Strategy performance CSV files (`*_portfolio_values.csv`): Portfolio values over time
+- Metrics file (`strategy_metrics.csv`): Comparison metrics for all strategies
+
+## Output
+
+After running strategies, the following outputs are generated:
+- Portfolio value CSV files in `data/` directory
+- Performance charts in `images/` directory:
+  - Individual strategy performance charts
+  - Strategy comparison charts
+  - Drawdown comparison charts 
+  - Performance metrics visualization
+
+## Contributing
+
+Feel free to contribute to this project by opening issues or submitting pull requests.
