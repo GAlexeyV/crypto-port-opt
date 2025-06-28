@@ -7,29 +7,30 @@ This repository contains implementations of various trading strategies based on 
 ### Performance Metrics Over 3 Years
 | Strategy | Total Return | Annualized Return | Max Drawdown | Sharpe Ratio | Sortino Ratio |
 |----------|--------------|------------------|--------------|--------------|---------------|
-| BTC Hold | 260.7%       | 51.8%            | 45.7%        | 1.62         | 2.45          |
-| HRP      | 152.3%       | 36.2%            | 38.2%        | 1.31         | 1.98          |
-| Momentum | 168.5%       | 38.9%            | 42.1%        | 1.26         | 1.92          |
-| Mom-HRP  | 172.6%       | 39.5%            | 40.5%        | 1.29         | 1.96          |
-| Mom-W HRP| 175.2%       | 39.8%            | 39.8%        | 1.32         | 1.99          |
-| Equal W  | 138.9%       | 33.7%            | 50.3%        | 1.12         | 1.72          |
+| BTC Hold | 251.34%      | 52.18%           | 39.11%       | 1.22         | 2.10          |
+| HRP      | 169.20%      | 39.22%           | 50.71%       | 0.76         | 1.26          |
+| Mom-HRP  | 129.91%      | 34.19%           | 53.49%       | 0.65         | 1.06          |
+| Mom-W HRP| 127.55%      | 31.62%           | 50.55%       | 0.61         | 0.97          |
+| Equal W  | 70.27%       | 19.47%           | 56.21%       | 0.35         | 0.55          |
+| Momentum | 70.27%       | 19.47%           | 56.21%       | 0.35         | 0.55          |
 
 ### Key Findings
 - BTC Hold strategy outperformed all others in total and annualized returns
-- HRP-based strategies showed improved risk metrics (lower drawdowns)
-- Momentum-enhanced strategies improved upon pure HRP but still underperformed BTC Hold
-- Equal weight approach had the worst risk-adjusted performance metrics
+- HRP strategy showed strong performance with the second-best returns
+- Momentum-HRP and Momentum-Weighted HRP hybrid strategies performed similarly
+- Basic Momentum and Equal Weight strategies significantly underperformed others
+- None of the portfolio strategies outperformed simple BTC Hold, highlighting the challenge of beating Bitcoin in a bull market
 
 ### Comparison Visualizations
 
 #### Portfolio Value Comparison
-![Portfolio Value Comparison](./images/portfolio_comparison_clean.png)
+![Portfolio Value Comparison](./images/portfolio_comparison.png)
 
 #### Performance Metrics Comparison
-![Metrics Comparison](./images/metrics_comparison_clean.png)
+![Metrics Comparison](./images/metrics_comparison.png)
 
 #### Drawdown Comparison
-![Drawdown Comparison](./images/drawdown_comparison_clean.png)
+![Drawdown Comparison](./images/drawdown_comparison.png)
 
 ## Repository Structure
 

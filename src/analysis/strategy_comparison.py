@@ -38,15 +38,19 @@ def load_strategy_data(file_path, strategy_name):
         Series of portfolio values indexed by date
     """
     try:
-        data = pd.read_csv(file_path, index_col=0, parse_dates=True)
-        if isinstance(data, pd.DataFrame) and len(data.columns) == 1:
-            # If it's a DataFrame with a single column, convert to Series
-            return pd.Series(data.iloc[:, 0], name=strategy_name)
-        elif isinstance(data, pd.Series):
-            data.name = strategy_name
-            return data
+        if os.path.exists(file_path):
+            df = pd.read_csv(file_path, index_col=0, parse_dates=True)
+            if len(df.columns) == 1:
+                # Sort by date index to ensure chronological order
+                series = df.iloc[:, 0].sort_index()
+                print(f"Loaded {strategy_name} strategy data")
+                return series
+            else:
+                print(f"Warning: {file_path} has more than one column. Using first column.")
+                series = df.iloc[:, 0].sort_index()
+                return series
         else:
-            print(f"Warning: Unexpected data format for {strategy_name}")
+            print(f"File not found: {file_path}")
             return None
     except Exception as e:
         print(f"Error loading {strategy_name} data: {e}")
@@ -70,6 +74,9 @@ def calculate_metrics(portfolio_values):
     # Ensure we have valid data
     if portfolio_values is None or len(portfolio_values) < 2:
         return {}
+    
+    # Ensure values are sorted by date
+    portfolio_values = portfolio_values.sort_index()
     
     # Calculate daily returns
     daily_returns = portfolio_values.pct_change().dropna()
